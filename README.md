@@ -1,1 +1,3 @@
-# Android-Sensors
+# Android-Activity-Recognition and Health Recommendation App
+	Using Rest API and Web Scoket 
+		And multiple AI Algorithms such as DDN,DBN,Data Mining Algorithms and ...
