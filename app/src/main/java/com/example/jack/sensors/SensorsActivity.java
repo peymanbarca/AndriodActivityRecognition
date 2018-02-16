@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +30,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static android.R.attr.data;
 import static com.example.jack.sensors.R.id.accel;
@@ -42,10 +44,11 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     private Button b1;
     private Button b2;
     private Button b3;
+    private EditText e1;
+    private EditText e2;
 
 
-
-
+    Boolean status_socket=false;
     int flag=0; // to start and stop sensor event
 
     Boolean start_flag=false;
@@ -60,7 +63,6 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     List<Float> gyro_y = new ArrayList<Float>();
     List<Float> gyro_z = new ArrayList<Float>();
 
-    Boolean SocketStatus=false;
 
     private SensorManager mSensorManager;
 
@@ -82,7 +84,8 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         b1 = (Button) findViewById(R.id.start);
         b2 = (Button) findViewById(R.id.send);
         b3 = (Button) findViewById(R.id.b3);
-
+        e1 = (EditText) findViewById(R.id.e1);
+        e2 = (EditText) findViewById(R.id.e2);
 
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -174,12 +177,35 @@ public class SensorsActivity extends Activity implements SensorEventListener {
             @Override
             public void onClick(View v)
             {
+                e1.setVisibility(View.VISIBLE);
+                e2.setVisibility(View.VISIBLE);
+                String host=e1.getText().toString();
+                Integer port=Integer.parseInt(e2.getText().toString()) ;
+
+//                MyClientTask myClientTask = new MyClientTask(
+//                        "192.168.1.6", 5500,gyro_x,gyro_y,gyro_z);
                 MyClientTask myClientTask = new MyClientTask(
-                        "192.168.1.6", 5500,gyro_x,gyro_y,gyro_z,SocketStatus);
-                myClientTask.execute();
-                if (SocketStatus)
-                    Toast.makeText(SensorsActivity.this, "Socket Connected!",
-                            Toast.LENGTH_SHORT).show();
+                        host, port,gyro_x,gyro_y,gyro_z);
+                myClientTask.execute(status_socket);
+
+//                try {
+//                    Boolean status_socket1=myClientTask.execute(status_socket).get();
+//                    Toast.makeText(SensorsActivity.this, status_socket1.toString(),
+//                            Toast.LENGTH_SHORT).show();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
+
+
+
+//                if (status_socket==true)
+//                    Toast.makeText(SensorsActivity.this, "Socket Connected and Success!",
+//                            Toast.LENGTH_SHORT).show();
+//                else
+//                    Toast.makeText(SensorsActivity.this, "Socket Not Connected!",
+//                            Toast.LENGTH_SHORT).show();
 
             }
         });

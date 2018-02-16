@@ -16,7 +16,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyClientTask extends AsyncTask<Void, Void, Void> {
+public class MyClientTask extends AsyncTask<Boolean, Void, Boolean> {
 
     String dstAddress;
     int dstPort;
@@ -24,21 +24,22 @@ public class MyClientTask extends AsyncTask<Void, Void, Void> {
     List<Float> gyro_x1 = new ArrayList<Float>();
     List<Float> gyro_y1 = new ArrayList<Float>();
     List<Float> gyro_z1 = new ArrayList<Float>();
-    Boolean status1;
 
-    MyClientTask(String addr, int port,List<Float> gyro_x,List<Float> gyro_y,List<Float> gyro_z,Boolean status){
+
+    MyClientTask(String addr, int port,List<Float> gyro_x,List<Float> gyro_y,List<Float> gyro_z)
+    {
         dstAddress = addr;
         dstPort = port;
         gyro_x1=gyro_x;
         gyro_y1=gyro_y;
         gyro_z1=gyro_z;
-        status1=status;
     }
 
     @Override
-    protected Void doInBackground(Void... arg0) {
+    protected Boolean doInBackground(Boolean... arg0) {
 
         Socket socket = null;
+        Boolean status1=arg0[0];
 
         try {
             socket = new Socket(dstAddress, dstPort);
@@ -75,7 +76,7 @@ public class MyClientTask extends AsyncTask<Void, Void, Void> {
                 out.println(gyro_z1.get(i));
             }
 
-
+            status1=true;
 //            out.flush();
 //            out.close();
 
@@ -85,6 +86,7 @@ public class MyClientTask extends AsyncTask<Void, Void, Void> {
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
+                    status1=false;
                 }
             }
 
@@ -92,18 +94,21 @@ public class MyClientTask extends AsyncTask<Void, Void, Void> {
             // TODO Auto-generated catch block
             e.printStackTrace();
             response = "UnknownHostException: " + e.toString();
+            status1=false;
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             response = "IOException: " + e.toString();
+            status1=false;
         }
-        return null;
+        return status1;
     }
 
     @Override
-    protected void onPostExecute(Void result) {
+    protected void onPostExecute(Boolean result) {
 
         super.onPostExecute(result);
+
     }
 
 }
