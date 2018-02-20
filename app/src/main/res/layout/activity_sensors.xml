@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_sensors"
@@ -9,17 +13,32 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.jack.sensors.SensorsActivity"
-    android:background="@drawable/n2">
+    android:background="@drawable/a1">
 
-    <TextView
-        android:text="Accelerometer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="82dp"
-        android:id="@+id/textView2" />
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- As the main content view, the view below consumes the entire
+             space available using match_parent in both dimensions. -->
+
+        <!-- android:layout_gravity="start" tells DrawerLayout to treat
+             this as a sliding drawer on the left side for left-to-right
+             languages and on the right side for right-to-left languages.
+             The drawer is given a fixed width in dp and extends the full height of
+             the container. A solid background is used for contrast
+             with the content view. -->
+        <ListView
+            android:id="@+id/left_drawer"
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:choiceMode="singleChoice"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:background="@color/colorPrimaryDark"/>
+    </android.support.v4.widget.DrawerLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,42 +56,6 @@
         android:layout_alignRight="@+id/accel"
         android:layout_alignEnd="@+id/accel" />
 
-    <TextView
-        android:text="Gyroscope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="129dp"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/accel"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:text="Start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/start"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_marginRight="15dp"
-        android:layout_marginEnd="15dp"
-        android:fontFamily="casual"
-        android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/send"
-        android:layout_toStartOf="@+id/send"
-        android:layout_marginBottom="35dp" />
-
-    <Button
-        android:text="Send To Server"
-        android:layout_height="wrap_content"
-        android:id="@+id/send"
-        android:layout_width="wrap_content"
-        style="@android:style/Widget.Material.Light.Button"
-        android:background="@android:color/holo_blue_bright"
-        android:fontFamily="casual"
-        android:layout_alignBottom="@+id/start"
-        android:layout_centerHorizontal="true"
-        android:layout_alignTop="@+id/start" />
-
     <Button
         android:text="Socket"
         android:layout_width="wrap_content"
@@ -85,35 +68,107 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginRight="15dp"
-        android:layout_marginEnd="15dp" />
+        android:layout_marginEnd="15dp"
+        android:background="@android:color/holo_purple"
+        android:textSize="10sp"
+        android:textStyle="normal|italic" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="text|number"
         android:ems="10"
         android:id="@+id/e2"
         android:visibility="invisible"
         android:background="@android:color/darker_gray"
-        android:text="5500"
-        android:layout_marginTop="26dp"
         android:layout_below="@+id/e1"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignStart="@+id/e1"
+        android:layout_marginTop="12dp"
+        tools:inputType="text" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="text|number"
         android:ems="10"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="45dp"
         android:id="@+id/e1"
         android:visibility="invisible"
         android:background="@android:color/darker_gray"
-        android:text="192.168.1.6"
         android:layout_below="@+id/gyro"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_toStartOf="@+id/b3" />
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/b3"
+        android:layout_alignEnd="@+id/b3"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/bl"
+        android:background="@drawable/bl" />
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="19dp"
+        android:id="@+id/c1"
+        android:textSize="14sp"
+        android:layout_alignStart="@+id/e1" />
+
+    <Button
+        android:text=" Send To Server "
+        android:layout_height="wrap_content"
+        android:id="@+id/send"
+        android:layout_width="wrap_content"
+        style="@android:style/Widget.Material.Light.Button"
+        android:background="@android:color/holo_blue_bright"
+        android:fontFamily="casual"
+        android:textSize="10sp"
+        android:textStyle="normal|italic"
+        android:layout_alignBaseline="@+id/start"
+        android:layout_alignBottom="@+id/start"
+        android:layout_toEndOf="@+id/start" />
+
+    <Button
+        android:text="Collect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/start"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_marginRight="15dp"
+        android:fontFamily="casual"
+        android:layout_marginBottom="37dp"
+        android:background="@color/colorAccent"
+        android:textSize="10sp"
+        android:textStyle="normal|italic"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/e2" />
+
+    <TextView
+        android:text="Accelerometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/c1"
+        android:layout_alignStart="@+id/textView3" />
+
+    <TextView
+        android:text="Orientation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_marginTop="74dp"
+        android:layout_below="@+id/accel"
+        android:layout_toEndOf="@+id/e1" />
+
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

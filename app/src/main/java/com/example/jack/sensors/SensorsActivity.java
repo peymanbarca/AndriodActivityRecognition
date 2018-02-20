@@ -1,21 +1,41 @@
 package com.example.jack.sensors;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jack.sensors.MyClientTask;
+import com.example.jack.sensors.Const;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,11 +50,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import static android.R.attr.data;
 import static com.example.jack.sensors.R.id.accel;
-
+import static com.example.jack.sensors.R.id.none;
 
 
 public class SensorsActivity extends Activity implements SensorEventListener {
@@ -46,13 +67,20 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     private Button b3;
     private EditText e1;
     private EditText e2;
+    private Chronometer c1;
 
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private String[] mPlanetTitles;
 
     Boolean status_socket=false;
     int flag=0; // to start and stop sensor event
 
     Boolean start_flag=false;
-
 
 
     List<Float> acc_x = new ArrayList<Float>();
@@ -67,7 +95,7 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     private SensorManager mSensorManager;
 
     private Sensor mAccelerometer;
-    private Sensor mGyroscope;
+    private Sensor mOrientation;
 
     // Create a constant to convert nanoseconds to seconds.
     private static final float NS2S = 1.0f / 1000000000.0f;
@@ -86,12 +114,15 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         b3 = (Button) findViewById(R.id.b3);
         e1 = (EditText) findViewById(R.id.e1);
         e2 = (EditText) findViewById(R.id.e2);
+        c1 = (Chronometer) findViewById(R.id.c1) ;
 
+        e1.setText(((Const) this.getApplication()).getIp().toString());
+        e2.setText(((Const) this.getApplication()).getPort().toString());
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mGyroscope     = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        mOrientation     = mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 
         if(mAccelerometer != null) {
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -101,13 +132,61 @@ public class SensorsActivity extends Activity implements SensorEventListener {
             finish();
         }
 
-        if(mGyroscope != null) {
-            mSensorManager.registerListener(this, mGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+        if(mOrientation != null) {
+            mSensorManager.registerListener(this, mOrientation, SensorManager.SENSOR_DELAY_NORMAL);
         }
         else {
-            Log.e("onCreate", "No Gyroscope found!");
+            Log.e("onCreate", "No Orientation found!");
             finish();
         }
+
+        // -----------------
+
+       mTitle = mDrawerTitle = getTitle();
+        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+        // set up the drawer's list view with items and click listener
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mPlanetTitles));
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+         //enable ActionBar app icon to behave as action to toggle nav drawer
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+//        getActionBar().setHomeButtonEnabled(true);
+
+//        // ActionBarDrawerToggle ties together the the proper interactions
+//        // between the sliding drawer and the action bar app icon
+//        mDrawerToggle = new ActionBarDrawerToggle(
+//                this,                  /* host Activity */
+//                mDrawerLayout,         /* DrawerLayout object */
+//                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
+//                R.string.drawer_open,  /* "open drawer" description for accessibility */
+//                R.string.drawer_close  /* "close drawer" description for accessibility */
+//        ) {
+//            public void onDrawerClosed(View view) {
+//                getActionBar().setTitle(mTitle);
+//                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+//            }
+//
+//            public void onDrawerOpened(View drawerView) {
+//                getActionBar().setTitle(mDrawerTitle);
+//                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+//            }
+//        };
+//        mDrawerLayout.setDrawerListener(mDrawerToggle);
+//
+//        if (savedInstanceState == null) {
+//            selectItem(0);
+//        }
+
+
+
+
+    // -------------------------------------------------------
 
         b1.setOnClickListener(new View.OnClickListener()   {
 
@@ -122,14 +201,18 @@ public class SensorsActivity extends Activity implements SensorEventListener {
                     Toast.makeText(SensorsActivity.this, "Start to record data ! ",
                             Toast.LENGTH_SHORT).show();
                     b1.setText("Stop");
+                    c1.setBase(SystemClock.elapsedRealtime());
+                    c1.start();
+
                 }
                 else
                 {
                     flag = 0; // to stop onSensor changed method
                     int len_data=acc_x.size();
-                    Toast.makeText(SensorsActivity.this, "Record data Stopped!" + String.valueOf(len_data) + " data collected !"  ,
+                    Toast.makeText(SensorsActivity.this, "Recording data Stopped!" + String.valueOf(len_data) + " data collected !"  ,
                             Toast.LENGTH_SHORT).show();
                     b1.setText("Start");
+                    c1.stop();
 
                 }
             }
@@ -177,16 +260,32 @@ public class SensorsActivity extends Activity implements SensorEventListener {
             @Override
             public void onClick(View v)
             {
+
+
                 e1.setVisibility(View.VISIBLE);
                 e2.setVisibility(View.VISIBLE);
+
                 String host=e1.getText().toString();
                 Integer port=Integer.parseInt(e2.getText().toString()) ;
 
 //                MyClientTask myClientTask = new MyClientTask(
 //                        "192.168.1.6", 5500,gyro_x,gyro_y,gyro_z);
-                MyClientTask myClientTask = new MyClientTask(
-                        host, port,gyro_x,gyro_y,gyro_z);
-                myClientTask.execute(status_socket);
+
+                if (flag==0 && acc_x.size() != 0)
+                {
+                    MyClientTask myClientTask = new MyClientTask(
+                            host, port,acc_x,acc_y,acc_z);
+                    myClientTask.execute(status_socket);
+                    acc_x = new ArrayList<Float>();
+                    acc_y = new ArrayList<Float>();
+                    acc_z = new ArrayList<Float>();
+                }
+                else
+                {
+                    Toast.makeText(SensorsActivity.this, "You dont have new data to send to server or Still Collecting!",
+                            Toast.LENGTH_SHORT).show();
+                }
+
 
 //                try {
 //                    Boolean status_socket1=myClientTask.execute(status_socket).get();
@@ -212,6 +311,43 @@ public class SensorsActivity extends Activity implements SensorEventListener {
 
     }
 
+
+
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
+
+    private void selectItem(int position) {
+        // update the main content by replacing fragments
+        if (position==0)
+        {
+            Toast.makeText(SensorsActivity.this, "You are now in Activity Recognition Part!",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else if (position==2)
+        {
+            startActivity(new Intent(SensorsActivity.this, SettingActivity.class));
+        }
+
+        // update selected item and title, then close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(mPlanetTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    //------------------------------------------
     @Override
     protected void onPause() {
         super.onPause();
@@ -222,7 +358,7 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        mSensorManager.registerListener(this, mGyroscope,     SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mOrientation,     SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
@@ -403,7 +539,8 @@ public class SensorsActivity extends Activity implements SensorEventListener {
 
             if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                 processAccelerometer(event);
-            } else if (mySensor.getType() == Sensor.TYPE_GYROSCOPE) {
+            }
+             else if (mySensor.getType() == Sensor.TYPE_ORIENTATION) {
                 processGyroscope(event);
             }
         }

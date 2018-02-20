@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Sensors</string>
+    <string-array name="planets_array">
+        <item>Activity Recognition</item>
+        <item>Health Recommendation</item>
+        <item>Setting</item>
+
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="title_activity_setting">SettingActivity</string>
 </resources>
