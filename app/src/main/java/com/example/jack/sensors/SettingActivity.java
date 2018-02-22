@@ -1,16 +1,11 @@
 package com.example.jack.sensors;
 
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import static android.R.attr.port;
-import static com.example.jack.sensors.R.id.c1;
 
 public class SettingActivity extends AppCompatActivity {
     private EditText e1;
@@ -24,7 +19,7 @@ public class SettingActivity extends AppCompatActivity {
 
         e1 = (EditText) findViewById(R.id.e1);
         e2 = (EditText) findViewById(R.id.e2);
-        b1= (Button) findViewById(R.id.button) ;
+        b1= (Button) findViewById(R.id.login) ;
 
         e1.setText(((Const) this.getApplication()).getIp().toString());
         e2.setText(((Const) this.getApplication()).getPort().toString());

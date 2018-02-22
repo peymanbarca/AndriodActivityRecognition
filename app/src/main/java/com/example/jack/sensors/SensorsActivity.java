@@ -356,8 +356,7 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         }
         else if (position==2)
         {
-            Toast.makeText(SensorsActivity.this, "Coming Soon!",
-                    Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(SensorsActivity.this, hcActivity.class));
         }
         else if (position==3)
         {
