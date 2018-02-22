@@ -38,6 +38,7 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:background="@color/colorPrimaryDark"/>
+
     </android.support.v4.widget.DrawerLayout>
 
     <TextView
@@ -46,7 +47,8 @@
         android:id="@+id/accel"
         android:layout_below="@+id/textView2"
         android:layout_alignRight="@+id/textView2"
-        android:layout_alignEnd="@+id/textView2" />
+        android:layout_alignEnd="@+id/textView2"
+        android:textColor="?android:attr/textColorPrimaryInverse" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -54,7 +56,8 @@
         android:id="@+id/gyro"
         android:layout_below="@+id/textView3"
         android:layout_alignRight="@+id/accel"
-        android:layout_alignEnd="@+id/accel" />
+        android:layout_alignEnd="@+id/accel"
+        android:textColor="?android:attr/textColorPrimaryInverse" />
 
     <Button
         android:text="Socket"
@@ -99,24 +102,6 @@
         android:layout_toStartOf="@+id/b3" />
 
     <Button
-        android:layout_width="40dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/b3"
-        android:layout_alignEnd="@+id/b3"
-        android:layout_marginBottom="20dp"
-        android:id="@+id/bl"
-        android:background="@drawable/bl" />
-
-    <Chronometer
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="19dp"
-        android:id="@+id/c1"
-        android:textSize="14sp"
-        android:layout_alignStart="@+id/e1" />
-
-    <Button
         android:text=" Send To Server "
         android:layout_height="wrap_content"
         android:id="@+id/send"
@@ -152,7 +137,8 @@
         android:layout_marginTop="15dp"
         android:id="@+id/textView2"
         android:layout_below="@+id/c1"
-        android:layout_alignStart="@+id/textView3" />
+        android:layout_alignStart="@+id/textView3"
+        android:textColor="@android:color/holo_orange_light" />
 
     <TextView
         android:text="Orientation"
@@ -161,14 +147,44 @@
         android:id="@+id/textView3"
         android:layout_marginTop="74dp"
         android:layout_below="@+id/accel"
-        android:layout_toEndOf="@+id/e1" />
+        android:layout_toEndOf="@+id/e1"
+        android:textColor="@android:color/holo_red_light" />
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/bl"
+        android:background="@drawable/bl"
+        android:layout_above="@+id/b3"
+        android:layout_alignEnd="@+id/textView3" />
+
+    <Button
+        android:text="--"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
+        android:id="@+id/bm"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/e1"
+        android:background="@drawable/d1" />
+
+    <Chronometer
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/c1"
+        android:textSize="14sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="37dp" />
 
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true">
+
+    </FrameLayout>
 
 
 </RelativeLayout>

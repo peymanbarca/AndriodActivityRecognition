@@ -18,6 +18,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,6 +66,7 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     private Button b1;
     private Button b2;
     private Button b3;
+    private Button bm;
     private EditText e1;
     private EditText e2;
     private Chronometer c1;
@@ -102,6 +104,8 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     private final float[] deltaRotationVector = new float[4];
     private float timestamp;
 
+    boolean menu_flag=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +116,7 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         b1 = (Button) findViewById(R.id.start);
         b2 = (Button) findViewById(R.id.send);
         b3 = (Button) findViewById(R.id.b3);
+        bm = (Button) findViewById(R.id.bm);
         e1 = (EditText) findViewById(R.id.e1);
         e2 = (EditText) findViewById(R.id.e2);
         c1 = (Chronometer) findViewById(R.id.c1) ;
@@ -309,6 +314,27 @@ public class SensorsActivity extends Activity implements SensorEventListener {
             }
         });
 
+        bm.setOnClickListener(new View.OnClickListener()   {
+
+            @Override
+            public void onClick(View v)
+            {
+                if (menu_flag==false)
+                {
+                    mDrawerLayout.openDrawer(Gravity.LEFT);
+                    menu_flag=true;
+                }
+                else
+                {
+                    mDrawerLayout.closeDrawer(Gravity.LEFT);
+                    menu_flag=false;
+                }
+
+            }
+
+
+        });
+
     }
 
 
@@ -323,12 +349,17 @@ public class SensorsActivity extends Activity implements SensorEventListener {
 
     private void selectItem(int position) {
         // update the main content by replacing fragments
-        if (position==0)
+        if (position==1)
         {
             Toast.makeText(SensorsActivity.this, "You are now in Activity Recognition Part!",
                     Toast.LENGTH_SHORT).show();
         }
         else if (position==2)
+        {
+            Toast.makeText(SensorsActivity.this, "Coming Soon!",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else if (position==3)
         {
             startActivity(new Intent(SensorsActivity.this, SettingActivity.class));
         }
